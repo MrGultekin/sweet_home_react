@@ -1,4 +1,7 @@
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom/";
+import {Route, BrowserRouter as  Router, Routes} from "react-router-dom";
+
+import{ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
 
 import Explore from "./pages/Explore";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -11,7 +14,7 @@ import Navbar from "./components/Navbar";
 function App() {
     return (
         <>
-            <Router>
+            <Router >
                 <Routes>
                     <Route path='/' element={<Explore/>}/>
                     <Route path='/offers' element={<Offers/>}/>
@@ -22,6 +25,7 @@ function App() {
                 </Routes>
                 <Navbar/>
             </Router>
+            <ToastContainer/>
         </>
     );
 }
