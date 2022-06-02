@@ -4,6 +4,7 @@ import {ReactComponent as ArrowRightIcon} from "../assets/svg/keyboardArrowRight
 import visibilityIcon from "../assets/svg/visibilityIcon.svg";
 import {getAuth, createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
 import {db} from "../firebase.config";
+import {setDoc, doc, serverTimestamp} from "firebase/firestore";
 
 const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -28,13 +29,20 @@ const SignUp = () => {
         try {
             const auth = getAuth()
 
-            const userCredentials = await createUserWithEmailAndPassword(auth,email,password)
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password)
 
-            const user= userCredentials.user;
+            const user = userCredential.user;
 
-              await updateProfile(auth.currentUser, { // TODO wait here is necessary ?
-                  displayName: name
-              })
+            await updateProfile(auth.currentUser, { // TODO wait here is necessary ?
+                displayName: name
+            })
+
+            const formDataCopy = {...formData} //makes copy of name,email,password but we dont want password 2 submit database
+            delete formDataCopy.password
+            formDataCopy.timestamp = serverTimestamp();
+
+            await setDoc(doc(db, 'users', user.uid), formDataCopy);
+
             navigate('/')
         } catch (error) {
             console.log(error)
